@@ -1,6 +1,7 @@
 package com.example.financeflow.state
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,10 +21,10 @@ class FinanceAppState {
     var currentScreen by mutableStateOf(Screen.DASHBOARD)
 
     // User Configured Monthly Budget
-    var totalBudget by mutableStateOf(1500.00)
+    var totalBudget by mutableDoubleStateOf(1500.00)
 
     // Observable transaction list
-    private val _transactions = mutableStateListOf<Transaction>(
+    private val _transactions = mutableStateListOf(
         Transaction(
             title = "Whole Foods Grocery",
             amount = 84.50,
