@@ -1,11 +1,10 @@
-package com.example.pmp.ui.screens
+package com.example.financeflow.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -22,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.pmp.model.Category
-import com.example.pmp.state.FinanceAppState
+import com.example.financeflow.model.Category
+import com.example.financeflow.state.FinanceAppState
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -141,7 +140,7 @@ fun AddTransactionDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(vertical = 4.dp)
                 ) {
-                    items(Category.values()) { category ->
+                    items(Category.entries) { category ->
                         val isSelected = selectedCategory == category
                         val categoryColor = Color(category.colorHex)
                         
@@ -212,7 +211,7 @@ fun AddTransactionDialog(
                             titleError = hasTitleError
                             amountError = hasAmountError
 
-                            if (!hasTitleError && !hasAmountError && parsedAmount != null) {
+                            if (!hasTitleError && !hasAmountError) {
                                 appState.addTransaction(
                                     title = cleanTitle,
                                     amount = parsedAmount,

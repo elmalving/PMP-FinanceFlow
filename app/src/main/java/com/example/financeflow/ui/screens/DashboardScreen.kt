@@ -1,4 +1,4 @@
-package com.example.pmp.ui.screens
+package com.example.financeflow.ui.screens
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -10,9 +10,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pmp.model.Transaction
-import com.example.pmp.state.FinanceAppState
-import com.example.pmp.state.Screen
+import com.example.financeflow.model.Transaction
+import com.example.financeflow.state.FinanceAppState
+import com.example.financeflow.state.Screen
 
 @Composable
 fun DashboardScreen(
@@ -68,19 +68,11 @@ fun DashboardScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column {
-                    Text(
-                        text = "Hello! 👋",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                    )
-                    Text(
-                        text = "FinanceFlow",
-                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                
+                Text(
+                    text = "FinanceFlow",
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
                 // Set Custom Budget quick action button
                 OutlinedButton(
                     onClick = { appState.currentScreen = Screen.SETTINGS },
@@ -223,7 +215,7 @@ fun DashboardScreen(
                     shape = RoundedCornerShape(16.dp),
                     contentPadding = PaddingValues(vertical = 14.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.TrendingUp, contentDescription = "Stats Icon")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.TrendingUp, contentDescription = "Stats Icon")
                     Spacer(modifier = Modifier.width(6.dp))
                     Text("Analytics", style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp))
                 }
@@ -252,7 +244,7 @@ fun DashboardScreen(
                     Text("See All", style = MaterialTheme.typography.labelLarge)
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        imageVector = Icons.Default.ArrowForward,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "Forward Icon",
                         modifier = Modifier.size(16.dp)
                     )

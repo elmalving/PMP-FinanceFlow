@@ -1,4 +1,4 @@
-package com.example.pmp.model
+package com.example.financeflow.model
 
 import java.util.UUID
 

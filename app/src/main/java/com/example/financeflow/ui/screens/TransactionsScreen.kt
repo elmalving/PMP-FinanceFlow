@@ -1,4 +1,4 @@
-package com.example.pmp.ui.screens
+package com.example.financeflow.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pmp.model.Category
-import com.example.pmp.model.Transaction
-import com.example.pmp.state.FinanceAppState
+import com.example.financeflow.model.Category
+import com.example.financeflow.model.Transaction
+import com.example.financeflow.state.FinanceAppState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +36,7 @@ fun TransactionsScreen(
     var selectedCategory by rememberSaveable { mutableStateOf<Category?>(null) }
 
     // Reactive filtering based on search query and category
-    val filteredTransactions = remember(appState.transactions, searchQuery, selectedCategory) {
+    val filteredTransactions = remember(appState.transactions.size, searchQuery, selectedCategory) {
         appState.transactions.filter { transaction ->
             val matchesCategory = selectedCategory == null || transaction.category == selectedCategory
             val matchesSearch = transaction.title.contains(searchQuery, ignoreCase = true) ||
@@ -107,7 +107,7 @@ fun TransactionsScreen(
             }
 
             // Individual Categories
-            items(Category.values()) { category ->
+            items(Category.entries) { category ->
                 FilterChip(
                     selected = selectedCategory == category,
                     onClick = { selectedCategory = category },

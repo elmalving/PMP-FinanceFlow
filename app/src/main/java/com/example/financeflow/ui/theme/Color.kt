@@ -1,4 +1,4 @@
-package com.example.pmp.ui.theme
+package com.example.financeflow.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.example.pmp
+package com.example.financeflow
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,21 +15,21 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.example.pmp.state.FinanceAppState
-import com.example.pmp.state.Screen
-import com.example.pmp.ui.screens.AddTransactionDialog
-import com.example.pmp.ui.screens.AnalyticsScreen
-import com.example.pmp.ui.screens.DashboardScreen
-import com.example.pmp.ui.screens.SettingsScreen
-import com.example.pmp.ui.screens.TransactionsScreen
-import com.example.pmp.ui.theme.PMPTheme
+import com.example.financeflow.state.FinanceAppState
+import com.example.financeflow.state.Screen
+import com.example.financeflow.ui.screens.AddTransactionDialog
+import com.example.financeflow.ui.screens.AnalyticsScreen
+import com.example.financeflow.ui.screens.DashboardScreen
+import com.example.financeflow.ui.screens.SettingsScreen
+import com.example.financeflow.ui.screens.TransactionsScreen
+import com.example.financeflow.ui.theme.FinanceFlowTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PMPTheme {
+            FinanceFlowTheme {
                 val appState = remember { FinanceAppState() }
 
                 Scaffold(

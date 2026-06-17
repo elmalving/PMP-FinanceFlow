@@ -1,7 +1,7 @@
-package com.example.pmp
+package com.example.financeflow
 
-import com.example.pmp.model.Category
-import com.example.pmp.state.FinanceAppState
+import com.example.financeflow.model.Category
+import com.example.financeflow.state.FinanceAppState
 import org.junit.Assert.*
 import org.junit.Test
 

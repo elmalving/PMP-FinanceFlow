@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PMP"
+rootProject.name = "FinanceFlow"
 include(":app")

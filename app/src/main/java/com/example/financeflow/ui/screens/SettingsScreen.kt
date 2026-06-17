@@ -1,6 +1,5 @@
-package com.example.pmp.ui.screens
+package com.example.financeflow.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,9 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pmp.state.FinanceAppState
+import com.example.financeflow.state.FinanceAppState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun SettingsScreen(
@@ -206,10 +206,10 @@ fun SettingsScreen(
                         onClick = {
                             scope.launch {
                                 isSyncing = true
-                                delay(2000) // simulated loading
+                                delay(2000.milliseconds) // simulated loading
                                 isSyncing = false
                                 showSyncSuccessSnackbar = true
-                                delay(3000)
+                                delay(3000.milliseconds)
                                 showSyncSuccessSnackbar = false
                             }
                         },

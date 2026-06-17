@@ -1,4 +1,4 @@
-package com.example.pmp.ui.theme
+package com.example.financeflow.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +35,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun PMPTheme(
+fun FinanceFlowTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Set dynamicColor default to false so that our premium custom branding takes precedence
     dynamicColor: Boolean = false,

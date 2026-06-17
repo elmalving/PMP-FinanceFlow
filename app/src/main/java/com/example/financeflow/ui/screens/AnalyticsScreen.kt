@@ -1,4 +1,4 @@
-package com.example.pmp.ui.screens
+package com.example.financeflow.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pmp.model.Category
-import com.example.pmp.state.FinanceAppState
+import com.example.financeflow.model.Category
+import com.example.financeflow.state.FinanceAppState
 
 @Composable
 fun AnalyticsScreen(
@@ -31,7 +31,7 @@ fun AnalyticsScreen(
 
     // Calculate details for each category
     val categoryDetailsList = remember(appState.transactions, totalSpent) {
-        Category.values().map { category ->
+        Category.entries.map { category ->
             val spent = appState.getSpentByCategory(category)
             val percentage = if (totalSpent > 0) (spent / totalSpent).toFloat() else 0f
             CategorySpendingDetails(category, spent, percentage)
