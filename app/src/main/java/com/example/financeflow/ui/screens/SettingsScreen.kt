@@ -273,7 +273,7 @@ fun SettingsScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "JD",
+                        text = "MH",
                         color = Color.White,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold
