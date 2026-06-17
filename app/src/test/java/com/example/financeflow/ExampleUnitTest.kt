@@ -1,15 +1,98 @@
 package com.example.financeflow
 
+import android.content.Context
+import com.example.financeflow.db.FinanceDatabaseHelper
 import com.example.financeflow.model.Category
+import com.example.financeflow.model.Transaction
 import com.example.financeflow.state.FinanceAppState
 import org.junit.Assert.*
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyDouble
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.whenever
 
 class ExampleUnitTest {
+
+    private fun createMockAppState(): FinanceAppState {
+        val context = mock(Context::class.java)
+        val dbHelper = mock(FinanceDatabaseHelper::class.java)
+        
+        val transactions = mutableListOf(
+            Transaction(
+                title = "Whole Foods Grocery",
+                amount = 84.50,
+                category = Category.FOOD,
+                date = "2026-06-12",
+                notes = "Weekly fresh grocery shopping"
+            ),
+            Transaction(
+                title = "Shell Gas Station",
+                amount = 45.00,
+                category = Category.TRANSPORT,
+                date = "2026-06-11",
+                notes = "Refueled the sedan"
+            ),
+            Transaction(
+                title = "Netflix Subscription",
+                amount = 15.99,
+                category = Category.ENTERTAINMENT,
+                date = "2026-06-10",
+                notes = "Standard HD monthly renewal"
+            ),
+            Transaction(
+                title = "Power & Grid Co.",
+                amount = 120.00,
+                category = Category.BILLS,
+                date = "2026-06-08",
+                notes = "May electricity bill"
+            ),
+            Transaction(
+                title = "Nike Shoes",
+                amount = 110.00,
+                category = Category.SHOPPING,
+                date = "2026-06-05",
+                notes = "Air Max running shoes on sale"
+            ),
+            Transaction(
+                title = "Local Coffee Shop",
+                amount = 7.50,
+                category = Category.FOOD,
+                date = "2026-06-14",
+                notes = "Espresso and croissant"
+            )
+        )
+        
+        var budget = 1500.00
+        
+        whenever(dbHelper.getBudget(anyDouble())).thenAnswer {
+            budget
+        }
+        whenever(dbHelper.getAllTransactions()).thenAnswer {
+            transactions.sortedByDescending { it.date }
+        }
+        whenever(dbHelper.insertTransaction(anyOrNull())).thenAnswer { invocation ->
+            val tx = invocation.getArgument<Transaction>(0)
+            transactions.add(tx)
+            1L
+        }
+        whenever(dbHelper.deleteTransaction(anyString())).thenAnswer { invocation ->
+            val id = invocation.getArgument<String>(0)
+            val removed = transactions.removeAll { it.id == id }
+            if (removed) 1 else 0
+        }
+        whenever(dbHelper.saveBudget(anyDouble())).thenAnswer { invocation ->
+            budget = invocation.getArgument<Double>(0)
+            Unit
+        }
+        
+        return FinanceAppState(context, dbHelper)
+    }
     
     @Test
     fun testInitialAppState() {
-        val appState = FinanceAppState()
+        val appState = createMockAppState()
         
         // Assert initial pre-populated transactions exist
         assertTrue(appState.transactions.isNotEmpty())
@@ -22,7 +105,7 @@ class ExampleUnitTest {
 
     @Test
     fun testAddTransaction() {
-        val appState = FinanceAppState()
+        val appState = createMockAppState()
         val initialCount = appState.transactions.size
         val initialSpent = appState.getTotalSpent()
         
@@ -49,7 +132,7 @@ class ExampleUnitTest {
 
     @Test
     fun testDeleteTransaction() {
-        val appState = FinanceAppState()
+        val appState = createMockAppState()
         
         // Add one unique transaction to delete
         appState.addTransaction(
@@ -74,7 +157,7 @@ class ExampleUnitTest {
 
     @Test
     fun testUpdateBudget() {
-        val appState = FinanceAppState()
+        val appState = createMockAppState()
         
         // Change budget to $2000
         appState.updateBudget(2000.00)
@@ -91,7 +174,7 @@ class ExampleUnitTest {
 
     @Test
     fun testNegativeBudgetIgnored() {
-        val appState = FinanceAppState()
+        val appState = createMockAppState()
         val originalBudget = appState.totalBudget
         
         // Try setting negative budget
@@ -103,7 +186,7 @@ class ExampleUnitTest {
 
     @Test
     fun testSpentByCategoryAggregation() {
-        val appState = FinanceAppState()
+        val appState = createMockAppState()
         
         // Clear all (by deleting) to test pure category summation
         val ids = appState.transactions.map { it.id }

@@ -18,11 +18,12 @@ enum class Screen {
     SETTINGS
 }
 
-class FinanceAppState(private val context: Context? = null) {
+class FinanceAppState(
+    private val context: Context,
+    private val dbHelper: FinanceDatabaseHelper = FinanceDatabaseHelper(context)
+) {
     // Current Active Tab Screen
     var currentScreen by mutableStateOf(Screen.DASHBOARD)
-
-    private val dbHelper = context?.let { FinanceDatabaseHelper(it) }
 
     // User Configured Monthly Budget
     var totalBudget by mutableDoubleStateOf(1500.00)
@@ -32,57 +33,8 @@ class FinanceAppState(private val context: Context? = null) {
     val transactions: List<Transaction> get() = _transactions
 
     init {
-        if (dbHelper != null) {
-            totalBudget = dbHelper.getBudget(1500.00)
-            _transactions.addAll(dbHelper.getAllTransactions())
-        } else {
-            _transactions.addAll(
-                listOf(
-                    Transaction(
-                        title = "Whole Foods Grocery",
-                        amount = 84.50,
-                        category = Category.FOOD,
-                        date = "2026-06-12",
-                        notes = "Weekly fresh grocery shopping"
-                    ),
-                    Transaction(
-                        title = "Shell Gas Station",
-                        amount = 45.00,
-                        category = Category.TRANSPORT,
-                        date = "2026-06-11",
-                        notes = "Refueled the sedan"
-                    ),
-                    Transaction(
-                        title = "Netflix Subscription",
-                        amount = 15.99,
-                        category = Category.ENTERTAINMENT,
-                        date = "2026-06-10",
-                        notes = "Standard HD monthly renewal"
-                    ),
-                    Transaction(
-                        title = "Power & Grid Co.",
-                        amount = 120.00,
-                        category = Category.BILLS,
-                        date = "2026-06-08",
-                        notes = "May electricity bill"
-                    ),
-                    Transaction(
-                        title = "Nike Shoes",
-                        amount = 110.00,
-                        category = Category.SHOPPING,
-                        date = "2026-06-05",
-                        notes = "Air Max running shoes on sale"
-                    ),
-                    Transaction(
-                        title = "Local Coffee Shop",
-                        amount = 7.50,
-                        category = Category.FOOD,
-                        date = "2026-06-14",
-                        notes = "Espresso and croissant"
-                    )
-                )
-            )
-        }
+        totalBudget = dbHelper.getBudget(1500.00)
+        _transactions.addAll(dbHelper.getAllTransactions())
     }
 
     // Dialog trigger state
@@ -128,18 +80,14 @@ class FinanceAppState(private val context: Context? = null) {
             notes = cleanNotes
         )
 
-        dbHelper?.insertTransaction(newTx)
-        if (dbHelper != null) {
-            _transactions.clear()
-            _transactions.addAll(dbHelper.getAllTransactions())
-        } else {
-            _transactions.add(newTx)
-        }
+        dbHelper.insertTransaction(newTx)
+        _transactions.clear()
+        _transactions.addAll(dbHelper.getAllTransactions())
     }
 
     // Action: Delete a transaction
     fun deleteTransaction(id: String) {
-        dbHelper?.deleteTransaction(id)
+        dbHelper.deleteTransaction(id)
         _transactions.removeAll { it.id == id }
     }
 
@@ -147,7 +95,7 @@ class FinanceAppState(private val context: Context? = null) {
     fun updateBudget(newBudget: Double) {
         if (newBudget >= 0) {
             totalBudget = newBudget
-            dbHelper?.saveBudget(newBudget)
+            dbHelper.saveBudget(newBudget)
         }
     }
 }
