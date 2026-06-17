@@ -1,10 +1,12 @@
 package com.example.financeflow.state
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.financeflow.db.FinanceDatabaseHelper
 import com.example.financeflow.model.Category
 import com.example.financeflow.model.Transaction
 import java.time.LocalDate
@@ -16,59 +18,72 @@ enum class Screen {
     SETTINGS
 }
 
-class FinanceAppState {
+class FinanceAppState(private val context: Context? = null) {
     // Current Active Tab Screen
     var currentScreen by mutableStateOf(Screen.DASHBOARD)
+
+    private val dbHelper = context?.let { FinanceDatabaseHelper(it) }
 
     // User Configured Monthly Budget
     var totalBudget by mutableDoubleStateOf(1500.00)
 
     // Observable transaction list
-    private val _transactions = mutableStateListOf(
-        Transaction(
-            title = "Whole Foods Grocery",
-            amount = 84.50,
-            category = Category.FOOD,
-            date = "2026-06-12",
-            notes = "Weekly fresh grocery shopping"
-        ),
-        Transaction(
-            title = "Shell Gas Station",
-            amount = 45.00,
-            category = Category.TRANSPORT,
-            date = "2026-06-11",
-            notes = "Refueled the sedan"
-        ),
-        Transaction(
-            title = "Netflix Subscription",
-            amount = 15.99,
-            category = Category.ENTERTAINMENT,
-            date = "2026-06-10",
-            notes = "Standard HD monthly renewal"
-        ),
-        Transaction(
-            title = "Power & Grid Co.",
-            amount = 120.00,
-            category = Category.BILLS,
-            date = "2026-06-08",
-            notes = "May electricity bill"
-        ),
-        Transaction(
-            title = "Nike Shoes",
-            amount = 110.00,
-            category = Category.SHOPPING,
-            date = "2026-06-05",
-            notes = "Air Max running shoes on sale"
-        ),
-        Transaction(
-            title = "Local Coffee Shop",
-            amount = 7.50,
-            category = Category.FOOD,
-            date = "2026-06-14",
-            notes = "Espresso and croissant"
-        )
-    )
+    private val _transactions = mutableStateListOf<Transaction>()
     val transactions: List<Transaction> get() = _transactions
+
+    init {
+        if (dbHelper != null) {
+            totalBudget = dbHelper.getBudget(1500.00)
+            _transactions.addAll(dbHelper.getAllTransactions())
+        } else {
+            _transactions.addAll(
+                listOf(
+                    Transaction(
+                        title = "Whole Foods Grocery",
+                        amount = 84.50,
+                        category = Category.FOOD,
+                        date = "2026-06-12",
+                        notes = "Weekly fresh grocery shopping"
+                    ),
+                    Transaction(
+                        title = "Shell Gas Station",
+                        amount = 45.00,
+                        category = Category.TRANSPORT,
+                        date = "2026-06-11",
+                        notes = "Refueled the sedan"
+                    ),
+                    Transaction(
+                        title = "Netflix Subscription",
+                        amount = 15.99,
+                        category = Category.ENTERTAINMENT,
+                        date = "2026-06-10",
+                        notes = "Standard HD monthly renewal"
+                    ),
+                    Transaction(
+                        title = "Power & Grid Co.",
+                        amount = 120.00,
+                        category = Category.BILLS,
+                        date = "2026-06-08",
+                        notes = "May electricity bill"
+                    ),
+                    Transaction(
+                        title = "Nike Shoes",
+                        amount = 110.00,
+                        category = Category.SHOPPING,
+                        date = "2026-06-05",
+                        notes = "Air Max running shoes on sale"
+                    ),
+                    Transaction(
+                        title = "Local Coffee Shop",
+                        amount = 7.50,
+                        category = Category.FOOD,
+                        date = "2026-06-14",
+                        notes = "Espresso and croissant"
+                    )
+                )
+            )
+        }
+    }
 
     // Dialog trigger state
     var showAddDialog by mutableStateOf(false)
@@ -105,19 +120,26 @@ class FinanceAppState {
         val cleanNotes = notes.trim()
         val cleanDate = date.trim().ifEmpty { LocalDate.now().toString() }
         
-        _transactions.add(
-            Transaction(
-                title = cleanTitle,
-                amount = amount,
-                category = category,
-                date = cleanDate,
-                notes = cleanNotes
-            )
+        val newTx = Transaction(
+            title = cleanTitle,
+            amount = amount,
+            category = category,
+            date = cleanDate,
+            notes = cleanNotes
         )
+
+        dbHelper?.insertTransaction(newTx)
+        if (dbHelper != null) {
+            _transactions.clear()
+            _transactions.addAll(dbHelper.getAllTransactions())
+        } else {
+            _transactions.add(newTx)
+        }
     }
 
     // Action: Delete a transaction
     fun deleteTransaction(id: String) {
+        dbHelper?.deleteTransaction(id)
         _transactions.removeAll { it.id == id }
     }
 
@@ -125,6 +147,7 @@ class FinanceAppState {
     fun updateBudget(newBudget: Double) {
         if (newBudget >= 0) {
             totalBudget = newBudget
+            dbHelper?.saveBudget(newBudget)
         }
     }
 }

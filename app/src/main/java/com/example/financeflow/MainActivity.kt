@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.example.financeflow.state.FinanceAppState
 import com.example.financeflow.state.Screen
 import com.example.financeflow.ui.screens.AddTransactionDialog
@@ -30,7 +31,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinanceFlowTheme {
-                val appState = remember { FinanceAppState() }
+                val context = LocalContext.current
+                val appState = remember { FinanceAppState(context) }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
